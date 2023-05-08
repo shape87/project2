@@ -94,7 +94,7 @@ class Server():
                         break
                     message = request.decode('utf-8')
                     arguments = message.split(',')
-                    amount = None if len(arguments) <= 1 else arguments[1][0]
+                    amount = None if len(arguments) <= 1 else float(arguments[1])
                     message = arguments[0]
                     continue_session = self.process_message(client, server, message, amount)
 
@@ -125,10 +125,26 @@ class Server():
         client.send(bytearray(return_message, 'utf-8'))
 
     def add_money(self, client, amount):
-        pass
+        self.user['Current balance'] += amount
+        return_message = json.dumps({"user": self.user['username'],
+                                     "balance": self.user['Current balance'],
+                                     "added": amount})
+        self.save_history(f"Added {amount} dollars {dt.now().strftime('%m/%d/%Y %H:%M:%S')}")
+        self.save_data()
+        client.send(bytearray(return_message, 'utf-8'))
 
     def withdraw_money(self, client, amount):
-        pass
+        if self.user['Current balance'] - amount < 0:
+            return_message = json.dumps({"error": "You broke, withdraw less!"})
+        else:
+            self.user['Current balance'] -= amount
+            return_message = json.dumps({"user": self.user['username'],
+                                         "balance": self.user['Current balance'],
+                                         "withdrew": amount})
+            self.save_history(f"Withdrew {amount} dollars {dt.now().strftime('%m/%d/%Y %H:%M:%S')}")
+            self.save_data()
+
+        client.send(bytearray(return_message, 'utf-8'))
 
     def see_history(self, client):
         return_message = json.dumps({"user": self.user['username'], "history": self.user['transaction']})

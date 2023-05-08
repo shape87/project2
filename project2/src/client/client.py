@@ -88,11 +88,11 @@ class Client():
                 print(self.send(option))
                 return True
             case "2":
-                amount = input("Input amount of money to add")
+                amount = input("Input amount of money to add: ")
                 print(self.send(','.join([option, amount])))
                 return True
             case "3":
-                amount = input("Input amount of money to withdraw")
+                amount = input("Input amount of money to withdraw: ")
                 print(self.send(','.join([option, amount])))
                 return True
             case "4":

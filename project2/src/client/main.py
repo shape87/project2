@@ -16,7 +16,7 @@ def main():
     continue_session = True
     while continue_session is True:
         c1.display_menu()
-        menu_option = input("Please input an option listed above:")
+        menu_option = input("Please input an option listed above: ")
         continue_session = c1.process_message(menu_option)
 
 
